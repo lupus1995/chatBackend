@@ -23,6 +23,10 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
+  async findUserByName({ name }: { name: string }): Promise<User> {
+    return this.userModel.findOne({ name });
+  }
+
   async findByIdAndUpdateUser({
     id,
     createUserDto,
