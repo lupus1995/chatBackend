@@ -11,7 +11,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(request: Request, name: string, password: string) {
-    console.log('werwert');
     const contextId = ContextIdFactory.getByRequest(request);
     const authService: AuthService = await this.moduleRef.resolve(
       AuthService,

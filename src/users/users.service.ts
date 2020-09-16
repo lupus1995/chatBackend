@@ -1,7 +1,9 @@
-import { CreateUserDto } from './dto/createUserDto';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { hash } from 'bcrypt';
+
+import { CreateUserDto } from './dto/createUserDto';
 import { User } from 'src/schemas/user.schema';
 
 @Injectable()
@@ -11,6 +13,8 @@ export class UsersService {
   // created user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
+    console.log(hash);
+    createdUser.password = await hash(createdUser.password, 10);
     console.log(createdUser);
     return createdUser.save();
   }
