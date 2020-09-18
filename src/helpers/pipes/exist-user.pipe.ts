@@ -1,4 +1,4 @@
-import { UsersService } from './../users/users.service';
+import { UsersService } from '../../users/users.service';
 import { Inject, PipeTransform } from '@nestjs/common';
 
 export class ExistUserPipe implements PipeTransform {
