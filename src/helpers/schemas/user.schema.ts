@@ -11,7 +11,7 @@ export class User extends Document {
     index: true,
     dropDups: true,
   })
-  name: string;
+  login: string;
 
   @Prop({
     type: 'String',
@@ -24,6 +24,14 @@ export class User extends Document {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ type: 'String', unique: true })
+  hashUrl: string;
+
+  name: string;
+  surname: string;
+  patronimic: string;
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User).plugin(
