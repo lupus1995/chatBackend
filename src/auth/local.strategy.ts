@@ -7,16 +7,21 @@ import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private moduleRef: ModuleRef) {
-    super({ passReqToCallback: true });
+    super({
+      passReqToCallback: true,
+      usernameField: 'email',
+      passwordField: 'password',
+    });
   }
 
-  async validate(request: Request, name: string, password: string) {
+  async validate(request: Request, email: string, password: string) {
     const contextId = ContextIdFactory.getByRequest(request);
     const authService: AuthService = await this.moduleRef.resolve(
       AuthService,
       contextId,
     );
-    const user = await authService.validateUser(name, password);
+
+    const user = await authService.validateUser(email, password);
 
     if (!user) {
       throw new UnauthorizedException();

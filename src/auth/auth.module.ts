@@ -1,5 +1,4 @@
 import { LocalStrategy } from './local.strategy';
-import { UsersModule } from './../users/users.module';
 import { Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
@@ -9,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/helpers/schemas/user.schema';
+import { RefreshGuard } from './refresh.guard';
 
 @Global()
 @Module({
@@ -17,11 +17,11 @@ import { User, UserSchema } from 'src/helpers/schemas/user.schema';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1800s' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshGuard],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, RefreshGuard],
 })
 export class AuthModule {}

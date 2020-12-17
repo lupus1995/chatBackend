@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
@@ -14,19 +14,15 @@ export class UsersService {
   // created user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const validate = await new CreateUserDto(createUserDto).validate();
-
+    console.log(validate);
     if (validate.length === 0) {
       const createdUser = new this.userModel(createUserDto);
       createdUser.password = await hash(createdUser.password, 10);
       return createdUser.save();
     }
 
-    console.log(45311);
-
     throw {
-      status: HttpStatus.BAD_REQUEST,
       message: this.getErrorMessage(validate),
-      error: 'Bad Request',
     };
   }
 
@@ -62,7 +58,7 @@ export class UsersService {
 
   private getErrorMessage(validate: ValidationError[]) {
     return validate.map(item => ({
-      filed: item.property,
+      field: item.property,
       message: Object.values(item.constraints),
     }));
   }
