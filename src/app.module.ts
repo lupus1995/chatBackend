@@ -5,7 +5,6 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DialogsModule } from './dialogs/dialogs.module';
-import { ControllerService } from './module/controller/controller.service';
 import { MessageService } from './message/message.service';
 import { MessageController } from './message/message.controller';
 import { MessageModule } from './message/message.module';
@@ -22,6 +21,6 @@ import { MessageModule } from './message/message.module';
     MessageModule,
   ],
   controllers: [AppController, MessageController],
-  providers: [AppService, ControllerService, MessageService],
+  providers: [AppService, MessageService],
 })
 export class AppModule {}
