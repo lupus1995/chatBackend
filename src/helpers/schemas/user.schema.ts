@@ -28,9 +28,24 @@ export class User extends Document {
   @Prop({ type: 'String', unique: true })
   hashUrl: string;
 
+  @Prop({
+    type: 'String',
+  })
   name: string;
+
+  @Prop({
+    type: 'String',
+  })
   surname: string;
+
+  @Prop({
+    type: 'String',
+  })
   patronimic: string;
+
+  @Prop({
+    type: 'String',
+  })
   avatar: string;
 }
 
