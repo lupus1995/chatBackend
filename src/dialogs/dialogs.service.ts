@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { getUnixTime } from 'date-fns';
-import { Model, Document } from 'mongoose';
+import { Model } from 'mongoose';
 import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { Message } from 'src/helpers/schemas/message.schema';
 import { User } from 'src/helpers/schemas/user.schema';

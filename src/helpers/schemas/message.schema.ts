@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { getUnixTime } from 'date-fns';
 import { Document } from 'mongoose';
 import * as mongooseUniqueValidator from 'mongoose-unique-validator';
 
@@ -47,6 +48,13 @@ export class Message extends Document {
   updatedAt: number;
 }
 
-export const MessageSchema = SchemaFactory.createForClass(Message).plugin(
-  mongooseUniqueValidator,
-);
+export const MessageSchema = SchemaFactory.createForClass(Message)
+  .plugin(mongooseUniqueValidator)
+  .pre<Message>('save', async function(next) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const message = this;
+    message.read = false;
+    message.createdAt = getUnixTime(new Date());
+    message.updatedAt = getUnixTime(new Date());
+    next();
+  });
