@@ -17,25 +17,39 @@ import { User } from 'src/helpers/schemas/user.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserFilter } from './create-user.filter';
 import { Response } from 'express';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
   // GET получить всех юзеров
   @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiResponse({
+    description: 'Получение информации о пользователях',
+    status: 200,
+  })
   async findAll(): Promise<User[]> {
     return await this.usersService.findAllUsers();
   }
 
   // GET :id - получить конкретного пользователя
   @Get(':id')
+  @ApiResponse({
+    description: 'Получение информации о пользователe',
+    status: 200,
+  })
   async findOne(@Param('id') id: { id: string }): Promise<User> {
     return await this.usersService.findOneUser(id);
   }
 
   // POST создание пользователя
   @Post()
+  @ApiResponse({
+    description: 'Создание пользователя',
+    status: 200,
+  })
   @UseFilters(CreateUserFilter)
   async create(@Body() createUserDto, @Res() res: Response) {
     try {
@@ -55,12 +69,20 @@ export class UsersController {
 
   // PUT :id - обновить пользователя
   @Put(':id')
+  @ApiResponse({
+    description: 'Обновление пользователя',
+    status: 200,
+  })
   async update(@Param('id') id, @Body() createUserDto: CreateUserDto) {
     return await this.usersService.findByIdAndUpdateUser({ id, createUserDto });
   }
 
   // DELETE :id - удалить пользователя
   @Delete(':id')
+  @ApiResponse({
+    description: 'Удаление пользователя',
+    status: 200,
+  })
   async delete(@Param('id') id) {
     return await this.usersService.deleteUser(id);
   }

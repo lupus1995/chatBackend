@@ -5,7 +5,7 @@ import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { Message } from 'src/helpers/schemas/message.schema';
 import { User } from 'src/helpers/schemas/user.schema';
 import { GetAllDialogsInterface } from './dialogs.interface';
-import { CreateDialogDto, UpdateDialogDto } from './dto/create-dialog.dto';
+import { CreateDialogDto, UpdateDialogDto } from './create-dialog.dto';
 
 @Injectable()
 export class DialogsService {

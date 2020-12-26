@@ -31,18 +31,21 @@
     "@nestjs/mongoose": "^7.0.2",
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/swagger": "^4.7.8",
     "@types/faker": "^5.1.5",
     "bcrypt": "^5.0.0",
     "class-validator": "^0.12.2",
     "colors": "^1.4.0",
     "faker": "^5.1.0",
+    "fastify-swagger": "^3.5.0",
     "mongoose": "^5.10.5",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

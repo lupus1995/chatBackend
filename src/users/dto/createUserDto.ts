@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Length, validate } from 'class-validator';
 import { UniqueUserEmailValidator } from 'src/helpers/validators/unique-user-email.validator';
 
@@ -8,6 +9,10 @@ interface CreateUserInterface {
 }
 
 export class CreateUserDto {
+  @ApiProperty({
+    description: 'Email пользователя',
+    type: 'string',
+  })
   @IsNotEmpty()
   @IsEmail()
   @UniqueUserEmailValidator({
@@ -15,9 +20,17 @@ export class CreateUserDto {
   })
   email: string;
 
+  @ApiProperty({
+    description: 'Имя пользователя',
+    type: 'string',
+  })
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({
+    description: 'Пароль пользователя',
+    type: 'string',
+  })
   @IsNotEmpty()
   @Length(8, 12)
   password: string;

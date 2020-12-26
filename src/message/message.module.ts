@@ -1,4 +1,3 @@
-import { DialogsSchema } from './../../console/schema/dialogs';
 import { MessageSchema } from './../helpers/schemas/message.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
