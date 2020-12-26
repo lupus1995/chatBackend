@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { getUnixTime } from 'date-fns';
+import { Model, Document } from 'mongoose';
 import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { Message } from 'src/helpers/schemas/message.schema';
 import { User } from 'src/helpers/schemas/user.schema';
 import { GetAllDialogsInterface } from './dialogs.interface';
+import { CreateDialogDto, UpdateDialogDto } from './dto/create-dialog.dto';
 
 @Injectable()
 export class DialogsService {
@@ -64,5 +66,30 @@ export class DialogsService {
     });
 
     return data;
+  }
+
+  async createDialog({ type, members }: CreateDialogDto): Promise<Dialogs> {
+    const dialog = new this.dialogsModel({ type, members });
+    const result = await dialog.save();
+    return result;
+  }
+
+  async updateDialog({
+    type,
+    members,
+    _id,
+  }: UpdateDialogDto): Promise<Dialogs> {
+    const dialog = await this.dialogsModel.findByIdAndUpdate(_id, {
+      type,
+      members,
+    });
+
+    return dialog;
+  }
+
+  async deleteDialog({ dialogId }: { dialogId: string }) {
+    const result = await this.dialogsModel.findByIdAndDelete(dialogId);
+    console.log(result);
+    return result;
   }
 }

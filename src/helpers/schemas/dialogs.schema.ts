@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { getUnixTime } from 'date-fns';
+import { Document, HookNextFunction } from 'mongoose';
 import * as mongooseUniqueValidator from 'mongoose-unique-validator';
 
 @Schema()
@@ -18,16 +19,22 @@ export class Dialogs extends Document {
   members: string[];
   @Prop({
     type: 'Number',
-    required: true,
   })
   createdAt: number;
   @Prop({
     type: 'Number',
-    required: true,
   })
   updatedAt: number;
 }
 
-export const DialogsSchema = SchemaFactory.createForClass(Dialogs).plugin(
-  mongooseUniqueValidator,
-);
+const DialogsSchema = SchemaFactory.createForClass(Dialogs)
+  .plugin(mongooseUniqueValidator)
+  .pre<Dialogs>('save', async function(next: HookNextFunction) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const dialog = this;
+    dialog.createdAt = getUnixTime(new Date());
+    dialog.updatedAt = getUnixTime(new Date());
+    next();
+  });
+
+export { DialogsSchema };
