@@ -22,11 +22,3 @@ export class CreateMessageDto {
   })
   message: string;
 }
-
-export class UpdateMessageDto extends CreateMessageDto {
-  @ApiProperty({
-    type: 'string',
-    description: 'Id сообщения',
-  })
-  _id: string;
-}

@@ -14,11 +14,3 @@ export class CreateDialogDto {
   })
   members: string[];
 }
-
-export class UpdateDialogDto extends CreateDialogDto {
-  @ApiProperty({
-    description: 'Id диалога',
-    type: 'string',
-  })
-  _id: string;
-}

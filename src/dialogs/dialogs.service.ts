@@ -5,7 +5,7 @@ import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { Message } from 'src/helpers/schemas/message.schema';
 import { User } from 'src/helpers/schemas/user.schema';
 import { GetAllDialogsInterface } from './dialogs.interface';
-import { CreateDialogDto, UpdateDialogDto } from './create-dialog.dto';
+import { CreateDialogDto } from './create-dialog.dto';
 
 @Injectable()
 export class DialogsService {
@@ -77,7 +77,7 @@ export class DialogsService {
     type,
     members,
     _id,
-  }: UpdateDialogDto): Promise<Dialogs> {
+  }: CreateDialogDto & { _id: string }): Promise<Dialogs> {
     const dialog = await this.dialogsModel.findByIdAndUpdate(_id, {
       type,
       members,

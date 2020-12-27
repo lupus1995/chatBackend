@@ -1,4 +1,4 @@
-import { CreateDialogDto, UpdateDialogDto } from './create-dialog.dto';
+import { CreateDialogDto } from './create-dialog.dto';
 import { DialogsService } from './dialogs.service';
 import {
   Body,
@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { GetAllDialogsInterface } from './dialogs.interface';
 import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('dialogs')
 @Controller('dialogs')
@@ -22,6 +22,12 @@ export class DialogsController {
   @ApiResponse({
     status: 200,
     description: 'Получение информации об диалогах',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id пользователя',
+    required: true,
+    type: String,
   })
   async findAll(@Param('id') id: string): Promise<GetAllDialogsInterface[]> {
     return await this.dialogService.findAll({ userId: id });
@@ -38,13 +44,25 @@ export class DialogsController {
   }
 
   // редактирование диалога
-  @Put()
+  @Put(':id')
   @ApiResponse({
     description: 'Редактирование диалога',
     status: 200,
   })
-  async update(@Body() updateDialogDto: UpdateDialogDto): Promise<Dialogs> {
-    return await this.dialogService.updateDialog(updateDialogDto);
+  @ApiParam({
+    name: 'id',
+    description: 'Id диалога',
+    required: true,
+    type: String,
+  })
+  async update(
+    @Body() updateDialogDto: CreateDialogDto,
+    @Param('id') id: string,
+  ): Promise<Dialogs> {
+    return await this.dialogService.updateDialog({
+      ...updateDialogDto,
+      _id: id,
+    });
   }
 
   // удаление диалога
@@ -52,6 +70,12 @@ export class DialogsController {
   @ApiResponse({
     description: 'Удаление диалога',
     status: 200,
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Id диалога',
+    required: true,
+    type: String,
   })
   async delete(@Param('id') id: string): Promise<Dialogs> {
     return await this.dialogService.deleteDialog({ dialogId: id });
