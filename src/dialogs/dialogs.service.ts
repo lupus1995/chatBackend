@@ -20,51 +20,35 @@ export class DialogsService {
   }: {
     userId: string;
   }): Promise<GetAllDialogsInterface[]> {
-    const dialogs = await this.dialogsModel.find({ members: userId });
-    const membersIds = dialogs.map(dialog => {
-      const member = dialog.members.filter(member => member !== userId)[0];
-      return member;
-    });
-
-    const members = await this.userModel.find({ _id: membersIds });
-    // console.log(members);
-
-    const dialogsIds = dialogs.map(dialog => dialog._id);
-    const lastMessagesIds: Message[] = [];
-
-    // TODO переделать на нормальный запрос в будущем
-    for (let i = 0; i < dialogsIds.length; i++) {
-      const dialogId = dialogsIds[i];
-      const message = await this.messageModel.findOne(
-        { dialogsId: dialogId },
-        { sort: { createdAt: -1 } },
-      );
-
-      lastMessagesIds.push(message._id);
-    }
-
-    const messages = await this.messageModel.find({ _id: lastMessagesIds });
-
-    const data = dialogs.map(dialog => {
-      const memberId = dialog.members.find(item => item !== userId);
-      const member = members.find(memberItem => memberItem._id == memberId);
-      const message = messages.find(messageItem => {
-        return messageItem.dialogsId == dialog._id;
+    const user = await this.userModel.findById(userId);
+    const dialogs = await this.dialogsModel
+      .find({ members: { $in: [user] } })
+      .populate({
+        path: 'members',
+        model: User,
+      })
+      .populate({
+        path: 'messages',
+        model: Message,
       });
 
+    console.log(dialogs[0]);
+
+    return dialogs.map(item => {
+      const member =
+        item.members.find(memberItem => memberItem._id !== user._id) || user;
+      const messageModel = item.messages[item.messages.length - 1];
       return {
         company: {
           fullname: `${member.name} ${member.surname}`,
           _id: member._id,
         },
-        message: message.message,
-        date: message.createdAt,
-        senderId: message.senderId,
-        recipientId: message.recipient,
+        message: messageModel.message,
+        date: messageModel.createdAt,
+        senderId: messageModel.senderId,
+        recipientId: messageModel.recipient,
       };
     });
-
-    return data;
   }
 
   async createDialog({ type, members }: CreateDialogDto): Promise<Dialogs> {
@@ -80,7 +64,7 @@ export class DialogsService {
   }: CreateDialogDto & { _id: string }): Promise<Dialogs> {
     const dialog = await this.dialogsModel.findByIdAndUpdate(_id, {
       type,
-      members,
+      // members,
     });
 
     return dialog;

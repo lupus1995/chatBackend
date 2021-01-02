@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
-export interface UsersInterface {
+export interface UsersInterface extends Document {
   login: string;
   email: string;
   password: string;
@@ -58,5 +58,5 @@ export const UsersSchema = new Schema({
   },
 });
 
-const Users = model('Users', UsersSchema);
+const Users = model<UsersInterface>('Users', UsersSchema);
 export default Users;

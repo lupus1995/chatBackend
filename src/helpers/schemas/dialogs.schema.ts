@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { getUnixTime } from 'date-fns';
-import { Document, HookNextFunction } from 'mongoose';
+import { Document, HookNextFunction, Types } from 'mongoose';
 import * as mongooseUniqueValidator from 'mongoose-unique-validator';
+import { Message } from './message.schema';
+import { User } from './user.schema';
 
 @Schema()
 export class Dialogs extends Document {
@@ -13,10 +15,17 @@ export class Dialogs extends Document {
   })
   type: string;
   @Prop({
-    type: ['String'],
+    type: [Types.ObjectId],
+    ref: User.name,
     required: true,
   })
-  members: string[];
+  members: User[];
+
+  @Prop({
+    type: [Types.ObjectId],
+    ref: Message.name,
+  })
+  messages: Message[];
   @Prop({
     type: 'Number',
   })

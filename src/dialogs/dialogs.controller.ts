@@ -29,7 +29,7 @@ export class DialogsController {
     required: true,
     type: String,
   })
-  async findAll(@Param('id') id: string): Promise<GetAllDialogsInterface[]> {
+  async findAll(@Param('id') id: string) {
     return await this.dialogService.findAll({ userId: id });
   }
 

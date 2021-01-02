@@ -6,55 +6,58 @@ import { random } from 'faker';
 import logs from '../helpers/colors';
 
 (async () => {
-  const dialogsData = ((await Dialogs.find({}, (err, dialogs) => {
+  const dialogsData = await Dialogs.find({}, (err, dialogs) => {
     if (err) {
       console.log(err);
     }
 
     return dialogs;
-  })) as unknown) as DialogsInterface[];
+  });
 
   const messages: MessageInterface[] = [];
 
-  dialogsData.forEach((dialog: DialogsInterface) => {
+  const newDialogData = dialogsData.map((dialog: DialogsInterface) => {
+    const messagesForDialogs: MessageInterface[] = [];
     for (let i = 0; i < 100; i++) {
+      let message: MessageInterface;
       if (i % 2 === 0) {
-        const message: MessageInterface = {
+        message = new Message({
           dialogsId: dialog._id,
           senderId: dialog.members[0],
-          recipient: dialog.members[1],
+          recipientId: dialog.members[1],
           createdAt: getUnixTime(new Date()),
           updatedAt: getUnixTime(new Date()),
           read: false,
           message: random.words(10),
-        };
-
-        messages.push(message);
+        });
       } else {
-        const message: MessageInterface = {
+        message = new Message({
           dialogsId: dialog._id,
           senderId: dialog.members[1],
-          recipient: dialog.members[0],
+          recipientId: dialog.members[0],
           createdAt: getUnixTime(new Date()),
           updatedAt: getUnixTime(new Date()),
           read: false,
           message: random.words(30),
-        };
-
-        messages.push(message);
+        });
       }
+      messagesForDialogs.push(message);
+      messages.push(message);
     }
+
+    dialog.messages = messagesForDialogs;
+    return dialog;
   });
 
-  messages.forEach(async message => {
-    console.log(message);
-    const messageModel = new Message(message);
-    await messageModel.save((err: any) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(logs.info('Successfully save message'));
-      }
-    });
+  newDialogData.forEach(async item => {
+    await item.save();
+  });
+
+  await Message.insertMany(messages, (error, message) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(logs.info('Messages saved successfully'));
+    }
   });
 })();

@@ -17,22 +17,21 @@ import logs from '../helpers/colors';
   const dialogs: DialogsInterface[] = [];
 
   members.forEach(member => {
-    dialogs.push({
+    const dialogModel = new Dialogs({
       type: 'dialog',
       members: [user._id, member._id],
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
+      messages: [],
     });
+    dialogs.push(dialogModel);
   });
 
-  dialogs.forEach(async dialog => {
-    const dialogModel = new Dialogs(dialog);
-    await dialogModel.save((err: any) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(logs.info('Successfully dialog user'));
-      }
-    });
+  await Dialogs.insertMany(dialogs, (error: any, docs: DialogsInterface[]) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(logs.info('Dialogs saved successfully'));
+    }
   });
 })();

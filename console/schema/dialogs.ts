@@ -1,9 +1,12 @@
-import { model, Schema } from 'mongoose';
+import { UsersInterface } from './user';
+import { model, Schema, Document } from 'mongoose';
+import { MessageInterface } from './message';
 
-export interface DialogsInterface {
-  _id?: string;
+export interface DialogsInterface extends Document {
+  _id: Schema.Types.ObjectId;
   type: string;
-  members: string[];
+  members: UsersInterface[];
+  messages: MessageInterface[];
   createdAt: number;
   updatedAt: number;
 }
@@ -16,8 +19,11 @@ export const DialogsSchema = new Schema({
     default: 'dialog',
   },
   members: {
-    type: [String],
+    type: [Schema.Types.ObjectId],
     required: true,
+  },
+  messages: {
+    type: [Schema.Types.ObjectId],
   },
   createdAt: {
     type: Number,
@@ -29,5 +35,5 @@ export const DialogsSchema = new Schema({
   },
 });
 
-const Dialogs = model('Dialogs', DialogsSchema);
+const Dialogs = model<DialogsInterface>('Dialogs', DialogsSchema);
 export default Dialogs;

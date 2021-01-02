@@ -1,11 +1,10 @@
-import { MessageSchema } from './../helpers/schemas/message.schema';
+import { MessageSchema, Message } from '../helpers/schemas/message.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Dialogs, DialogsSchema } from 'src/helpers/schemas/dialogs.schema';
 import { DialogsController } from './dialogs.controller';
 import { DialogsService } from './dialogs.service';
 import { User, UserSchema } from 'src/helpers/schemas/user.schema';
-import { Message } from 'src/helpers/schemas/message.schema';
 
 @Module({
   imports: [

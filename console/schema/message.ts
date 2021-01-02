@@ -1,9 +1,11 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Document } from 'mongoose';
+import { DialogsInterface } from './dialogs';
+import { UsersInterface } from './user';
 
-export interface MessageInterface {
-  dialogsId: string;
-  senderId: string;
-  recipient: string;
+export interface MessageInterface extends Document {
+  dialogsId: DialogsInterface;
+  senderId: UsersInterface;
+  recipientId: UsersInterface;
   read: boolean;
   message: string;
   createdAt: number;
@@ -12,15 +14,15 @@ export interface MessageInterface {
 
 const MessageSchema = new Schema({
   dialogsId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   senderId: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
-  recipient: {
-    type: String,
+  recipientId: {
+    type: Schema.Types.ObjectId,
     required: true,
   },
   read: {
@@ -41,5 +43,5 @@ const MessageSchema = new Schema({
   },
 });
 
-const Messages = model('Messages', MessageSchema);
+const Messages = model<MessageInterface>('Messages', MessageSchema);
 export default Messages;
