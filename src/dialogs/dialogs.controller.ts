@@ -12,6 +12,7 @@ import {
 import { GetAllDialogsInterface } from './dialogs.interface';
 import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/helpers/schemas/user.schema';
 
 @ApiTags('dialogs')
 @Controller('dialogs')
@@ -29,7 +30,7 @@ export class DialogsController {
     required: true,
     type: String,
   })
-  async findAll(@Param('id') id: string) {
+  async findAll(@Param('id') id: string): Promise<GetAllDialogsInterface[]> {
     return await this.dialogService.findAll({ userId: id });
   }
 
@@ -39,7 +40,9 @@ export class DialogsController {
     status: 201,
     description: 'Создание диалога',
   })
-  async create(@Body() createDialogDto: CreateDialogDto): Promise<Dialogs> {
+  async create(
+    @Body() createDialogDto: CreateDialogDto,
+  ): Promise<GetAllDialogsInterface> {
     return await this.dialogService.createDialog(createDialogDto);
   }
 
@@ -58,7 +61,7 @@ export class DialogsController {
   async update(
     @Body() updateDialogDto: CreateDialogDto,
     @Param('id') id: string,
-  ): Promise<Dialogs> {
+  ) {
     return await this.dialogService.updateDialog({
       ...updateDialogDto,
       _id: id,
@@ -79,5 +82,11 @@ export class DialogsController {
   })
   async delete(@Param('id') id: string): Promise<Dialogs> {
     return await this.dialogService.deleteDialog({ dialogId: id });
+  }
+
+  // получение пользователей для создания диалога
+  @Get('/members/:id')
+  async usersForCreateDialog(@Param('id') id: string): Promise<User[]> {
+    return await this.dialogService.getMembersForCreateDialog({ userId: id });
   }
 }

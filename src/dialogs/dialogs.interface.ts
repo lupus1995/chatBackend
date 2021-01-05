@@ -1,10 +1,13 @@
 export interface GetAllDialogsInterface {
   company: {
     fullname: string;
-    _id: string;
+    dialogId: string;
+    dialogCreatedDate: number;
+    typeDialog: string;
+    memberId: string;
   };
-  message: string;
-  date: number;
-  senderId: string;
-  recipientId: string;
+  message?: string;
+  date?: number;
+  senderId?: string;
+  recipientId?: string;
 }

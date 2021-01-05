@@ -21,7 +21,7 @@ export class Message extends Document {
     type: 'String',
     required: true,
   })
-  recipient: string;
+  recipientId: string;
 
   @Prop({
     type: 'Boolean',

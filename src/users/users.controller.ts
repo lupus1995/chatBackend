@@ -34,7 +34,7 @@ export class UsersController {
     return await this.usersService.findAllUsers();
   }
 
-  // GET :id - получить конкретного пользователя
+  // получить конкретного пользователя
   @Get(':id')
   @ApiResponse({
     description: 'Получение информации о пользователe',
@@ -44,7 +44,7 @@ export class UsersController {
     return await this.usersService.findOneUser(id);
   }
 
-  // POST создание пользователя
+  // создание пользователя
   @Post()
   @ApiResponse({
     description: 'Создание пользователя',
@@ -54,7 +54,6 @@ export class UsersController {
   async create(@Body() createUserDto, @Res() res: Response) {
     try {
       const result = await this.usersService.createUser(createUserDto);
-      console.log(result);
       return res.status(HttpStatus.OK).json(result);
     } catch (e) {
       const { message }: any = e;
@@ -67,7 +66,7 @@ export class UsersController {
     }
   }
 
-  // PUT :id - обновить пользователя
+  // обновить пользователя
   @Put(':id')
   @ApiResponse({
     description: 'Обновление пользователя',
@@ -77,13 +76,13 @@ export class UsersController {
     return await this.usersService.findByIdAndUpdateUser({ id, createUserDto });
   }
 
-  // DELETE :id - удалить пользователя
+  // удалить пользователя
   @Delete(':id')
   @ApiResponse({
     description: 'Удаление пользователя',
     status: 200,
   })
-  async delete(@Param('id') id) {
-    return await this.usersService.deleteUser(id);
+  async delete(@Param('id') id: string) {
+    return await this.usersService.deleteUser({ id });
   }
 }
