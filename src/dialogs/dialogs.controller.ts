@@ -8,11 +8,14 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
 } from '@nestjs/common';
 import { GetAllDialogsInterface } from './dialogs.interface';
 import { Dialogs } from 'src/helpers/schemas/dialogs.schema';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/helpers/schemas/user.schema';
+import { ExistUserPipe } from 'src/helpers/pipes/exist-user.pipe';
+import { ValidateDialogPipe } from './pipes/validate-dialog.pipe';
 
 @ApiTags('dialogs')
 @Controller('dialogs')
@@ -24,13 +27,23 @@ export class DialogsController {
     status: 200,
     description: 'Получение информации об диалогах',
   })
+  @ApiResponse({
+    description: 'Ошибка в параметрах запроса',
+    status: 400,
+  })
+  @ApiResponse({
+    description: 'Пользователь не найден в базе данных',
+    status: 404,
+  })
   @ApiParam({
     name: 'id',
     description: 'Id пользователя',
     required: true,
     type: String,
   })
-  async findAll(@Param('id') id: string): Promise<GetAllDialogsInterface[]> {
+  async findAll(
+    @Param('id', ExistUserPipe) id: string,
+  ): Promise<GetAllDialogsInterface[]> {
     return await this.dialogService.findAll({ userId: id });
   }
 
@@ -40,6 +53,11 @@ export class DialogsController {
     status: 201,
     description: 'Создание диалога',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка в параметрах запроса',
+  })
+  @UsePipes(ValidateDialogPipe)
   async create(
     @Body() createDialogDto: CreateDialogDto,
   ): Promise<GetAllDialogsInterface> {
@@ -52,15 +70,24 @@ export class DialogsController {
     description: 'Редактирование диалога',
     status: 200,
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка в параметрах запроса',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Диалога нет в базе данных',
+  })
   @ApiParam({
     name: 'id',
     description: 'Id диалога',
     required: true,
     type: String,
   })
+  @UsePipes(ValidateDialogPipe)
   async update(
     @Body() updateDialogDto: CreateDialogDto,
-    @Param('id') id: string,
+    @Param('id', ExistUserPipe) id: string,
   ) {
     return await this.dialogService.updateDialog({
       ...updateDialogDto,
@@ -74,6 +101,10 @@ export class DialogsController {
     description: 'Удаление диалога',
     status: 200,
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Диалога нет в базе данных',
+  })
   @ApiParam({
     name: 'id',
     description: 'Id диалога',
@@ -86,7 +117,17 @@ export class DialogsController {
 
   // получение пользователей для создания диалога
   @Get('/members/:id')
-  async usersForCreateDialog(@Param('id') id: string): Promise<User[]> {
+  @ApiResponse({
+    description: 'Получение пользователей для создания диалога',
+    status: 200,
+  })
+  @ApiResponse({
+    description: 'Пользователь не найден в базе данных',
+    status: 404,
+  })
+  async usersForCreateDialog(
+    @Param('id', ExistUserPipe) id: string,
+  ): Promise<User[]> {
     return await this.dialogService.getMembersForCreateDialog({ userId: id });
   }
 }

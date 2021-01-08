@@ -41,6 +41,7 @@ const DialogsSchema = SchemaFactory.createForClass(Dialogs)
   .pre<Dialogs>('save', async function(next: HookNextFunction) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const dialog = this;
+
     dialog.createdAt = getUnixTime(new Date());
     dialog.updatedAt = getUnixTime(new Date());
     next();

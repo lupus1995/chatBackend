@@ -26,12 +26,16 @@ export class UsersService {
     };
   }
 
-  async findAllUsers(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findAllUsers({ usersIds }: { usersIds?: string[] }): Promise<User[]> {
+    if (usersIds.length === 0) {
+      return await this.userModel.find().exec();
+    }
+
+    return await this.userModel.find({ _id: { $in: usersIds } }).exec();
   }
 
   async findOneUser({ id }: { id: string }): Promise<User> {
-    return this.userModel.findById(id);
+    return await this.userModel.findById(id);
   }
 
   async findUserByName({ name }: { name: string }): Promise<User> {

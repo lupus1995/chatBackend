@@ -1,5 +1,10 @@
 import { UsersService } from '../../users/users.service';
-import { Inject, PipeTransform } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  NotFoundException,
+  PipeTransform,
+} from '@nestjs/common';
 
 export class ExistUserPipe implements PipeTransform {
   constructor(
@@ -7,7 +12,14 @@ export class ExistUserPipe implements PipeTransform {
   ) {}
 
   async transform(value: string) {
-    const user = await this.usersService.findOneUser({ id: value });
-    return value;
+    try {
+      const user = await this.usersService.findOneUser({ id: value });
+      if (user) {
+        return value;
+      }
+      throw new NotFoundException('Указан несуществующий id пользователя');
+    } catch (e) {
+      throw new BadRequestException('Некорректно указан id пользователя');
+    }
   }
 }

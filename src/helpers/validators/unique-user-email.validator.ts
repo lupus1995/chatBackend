@@ -22,6 +22,7 @@ export class UniqueUserEmailValidatorConstruct
 export function UniqueUserEmailValidator(
   validationOptions?: ValidationOptions,
 ) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,

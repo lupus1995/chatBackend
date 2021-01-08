@@ -135,7 +135,6 @@ export class DialogsService {
 
   async deleteDialog({ dialogId }: { dialogId: string }) {
     const result = await this.dialogsModel.findByIdAndDelete(dialogId);
-    console.log(result);
     return result;
   }
 

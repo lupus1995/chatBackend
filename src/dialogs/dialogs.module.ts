@@ -6,6 +6,7 @@ import { DialogsController } from './dialogs.controller';
 import { DialogsService } from './dialogs.service';
 import { User, UserSchema } from 'src/helpers/schemas/user.schema';
 import { TypesController } from './types.controller';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { TypesController } from './types.controller';
     ]),
   ],
   controllers: [DialogsController, TypesController],
-  providers: [DialogsService],
+  providers: [DialogsService, UsersService],
 })
 export class DialogsModule {}

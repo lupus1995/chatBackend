@@ -31,7 +31,7 @@ export class UsersController {
     status: 200,
   })
   async findAll(): Promise<User[]> {
-    return await this.usersService.findAllUsers();
+    return await this.usersService.findAllUsers({ usersIds: [] });
   }
 
   // получить конкретного пользователя
