@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
 import { User } from 'src/helpers/schemas/user.schema';
@@ -13,17 +13,9 @@ export class UsersService {
 
   // created user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    // const validate = await new CreateUserDto(createUserDto).validate();
-    // console.log(validate);
-    // if (validate.length === 0) {
     const createdUser = new this.userModel(createUserDto);
     createdUser.password = await hash(createdUser.password, 10);
     return await createdUser.save();
-    // }
-
-    // throw {
-    //   message: this.getErrorMessage(validate),
-    // };
   }
 
   async setRefreshToken({
@@ -61,6 +53,22 @@ export class UsersService {
     return await this.userModel.findOne({ login });
   }
 
+  async findUserByRefreshToken({
+    refreshToken,
+    userId,
+  }: {
+    refreshToken: string;
+    userId: string;
+  }): Promise<User> {
+    const user = await this.userModel.findOne({
+      _id: userId,
+    });
+
+    if (user && (await compare(refreshToken, user.hashedRefreshToken))) {
+      return user;
+    }
+  }
+
   async findByIdAndUpdateUser({
     id,
     createUserDto,
@@ -74,11 +82,4 @@ export class UsersService {
   async deleteUser({ id }: { id: string }) {
     return this.userModel.findByIdAndDelete(id);
   }
-
-  // private getErrorMessage(validate: ValidationError[]) {
-  //   return validate.map(item => ({
-  //     field: item.property,
-  //     message: Object.values(item.constraints),
-  //   }));
-  // }
 }

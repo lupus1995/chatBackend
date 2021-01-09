@@ -3,12 +3,6 @@ import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { UniqueUserEmailValidator } from 'src/helpers/validators/unique-user-email.validator';
 import { UniqueUserLoginValidator } from 'src/helpers/validators/unique-user-login.validator';
 
-interface CreateUserInterface {
-  email: string;
-  name: string;
-  password: string;
-}
-
 export class CreateUserDto {
   @ApiProperty({
     description: 'Email пользователя',

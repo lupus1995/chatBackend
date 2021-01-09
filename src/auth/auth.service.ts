@@ -23,18 +23,14 @@ export class AuthService {
     return null;
   }
 
-  async getAccessToken(user: User) {
+  getAccessToken(user: User): string {
     const payload = { username: user.name, sub: user._id };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload);
   }
 
-  async getRefreshToken(user: User) {
+  getRefreshToken(user: User): string {
     const payload = { username: user.name, sub: user._id };
-    return {
-      refreshToken: this.jwtService.sign(payload, { expiresIn: 2628000 }),
-    };
+    return this.jwtService.sign(payload, { expiresIn: 2628000 });
   }
 
   async verifyToken(token: string) {
