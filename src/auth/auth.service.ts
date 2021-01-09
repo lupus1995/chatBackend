@@ -15,7 +15,6 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userModel.findOne({ email });
-    console.log('user', user);
 
     if (user && (await compare(password, user.password))) {
       return user;
@@ -24,10 +23,17 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async getAccessToken(user: User) {
     const payload = { username: user.name, sub: user._id };
     return {
       accessToken: this.jwtService.sign(payload),
+    };
+  }
+
+  async getRefreshToken(user: User) {
+    const payload = { username: user.name, sub: user._id };
+    return {
+      refreshToken: this.jwtService.sign(payload, { expiresIn: 2628000 }),
     };
   }
 

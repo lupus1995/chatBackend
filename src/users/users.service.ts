@@ -13,17 +13,28 @@ export class UsersService {
 
   // created user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const validate = await new CreateUserDto(createUserDto).validate();
-    console.log(validate);
-    if (validate.length === 0) {
-      const createdUser = new this.userModel(createUserDto);
-      createdUser.password = await hash(createdUser.password, 10);
-      return createdUser.save();
-    }
+    // const validate = await new CreateUserDto(createUserDto).validate();
+    // console.log(validate);
+    // if (validate.length === 0) {
+    const createdUser = new this.userModel(createUserDto);
+    createdUser.password = await hash(createdUser.password, 10);
+    return await createdUser.save();
+    // }
 
-    throw {
-      message: this.getErrorMessage(validate),
-    };
+    // throw {
+    //   message: this.getErrorMessage(validate),
+    // };
+  }
+
+  async setRefreshToken({
+    refreshToken,
+    _id,
+  }: {
+    refreshToken: string;
+    _id: string;
+  }): Promise<void> {
+    const hashedRefreshToken = await hash(refreshToken, 10);
+    await this.userModel.findByIdAndUpdate(_id, { hashedRefreshToken });
   }
 
   async findAllUsers({ usersIds }: { usersIds?: string[] }): Promise<User[]> {
@@ -46,6 +57,10 @@ export class UsersService {
     return this.userModel.findOne({ email });
   }
 
+  async findUserByLogin({ login }: { login: string }): Promise<User | null> {
+    return await this.userModel.findOne({ login });
+  }
+
   async findByIdAndUpdateUser({
     id,
     createUserDto,
@@ -60,10 +75,10 @@ export class UsersService {
     return this.userModel.findByIdAndDelete(id);
   }
 
-  private getErrorMessage(validate: ValidationError[]) {
-    return validate.map(item => ({
-      field: item.property,
-      message: Object.values(item.constraints),
-    }));
-  }
+  // private getErrorMessage(validate: ValidationError[]) {
+  //   return validate.map(item => ({
+  //     field: item.property,
+  //     message: Object.values(item.constraints),
+  //   }));
+  // }
 }

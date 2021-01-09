@@ -56,6 +56,11 @@ export const UsersSchema = new Schema({
   avatar: {
     type: String,
   },
+
+  hashedRefreshToken: {
+    type: String,
+    unique: true,
+  },
 });
 
 const Users = model<UsersInterface>('Users', UsersSchema);

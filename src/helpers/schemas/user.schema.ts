@@ -47,6 +47,12 @@ export class User extends Document {
     type: 'String',
   })
   avatar: string;
+
+  @Prop({
+    type: 'String',
+    unique: true,
+  })
+  hashedRefreshToken: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User).plugin(

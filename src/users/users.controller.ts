@@ -5,18 +5,13 @@ import {
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Param,
   Post,
   Put,
-  Res,
-  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/helpers/schemas/user.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateUserFilter } from './create-user.filter';
-import { Response } from 'express';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
@@ -48,22 +43,14 @@ export class UsersController {
   @Post()
   @ApiResponse({
     description: 'Создание пользователя',
-    status: 200,
+    status: 201,
   })
-  @UseFilters(CreateUserFilter)
-  async create(@Body() createUserDto, @Res() res: Response) {
-    try {
-      const result = await this.usersService.createUser(createUserDto);
-      return res.status(HttpStatus.OK).json(result);
-    } catch (e) {
-      const { message }: any = e;
-      console.log(message);
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        status: HttpStatus.BAD_REQUEST,
-        message: message,
-        error: 'Bad Request',
-      });
-    }
+  @ApiResponse({
+    description: 'Ошибка в данных запроса',
+    status: 400,
+  })
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.createUser(createUserDto);
   }
 
   // обновить пользователя

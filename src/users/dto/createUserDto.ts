@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, Length, validate } from 'class-validator';
+import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { UniqueUserEmailValidator } from 'src/helpers/validators/unique-user-email.validator';
+import { UniqueUserLoginValidator } from 'src/helpers/validators/unique-user-login.validator';
 
 interface CreateUserInterface {
   email: string;
@@ -35,14 +36,9 @@ export class CreateUserDto {
   @Length(8, 12)
   password: string;
 
-  constructor(createUserInterface: CreateUserInterface) {
-    this.email = createUserInterface.email;
-    this.name = createUserInterface.name;
-    this.password = createUserInterface.password;
-    return this;
-  }
-
-  async validate() {
-    return validate(this);
-  }
+  @IsNotEmpty()
+  @UniqueUserLoginValidator({
+    message: 'This login is already in use',
+  })
+  login: string;
 }

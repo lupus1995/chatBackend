@@ -14,6 +14,11 @@ export class AuthController {
     status: 200,
   })
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    const accessToken = await this.authService.getAccessToken(req.user);
+    const refreshToken = await this.authService.getRefreshToken(req.user);
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }
