@@ -12,6 +12,7 @@ import { MessageModule } from './message/message.module';
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/chatdb', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: true,
     }),
     UsersModule,
     AuthModule,

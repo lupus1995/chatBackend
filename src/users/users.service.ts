@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { compare, hash } from 'bcrypt';
+import { hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
 import { User } from 'src/helpers/schemas/user.schema';
-import { ValidationError } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -16,17 +15,6 @@ export class UsersService {
     const createdUser = new this.userModel(createUserDto);
     createdUser.password = await hash(createdUser.password, 10);
     return await createdUser.save();
-  }
-
-  async setRefreshToken({
-    refreshToken,
-    _id,
-  }: {
-    refreshToken: string;
-    _id: string;
-  }): Promise<void> {
-    const hashedRefreshToken = await hash(refreshToken, 10);
-    await this.userModel.findByIdAndUpdate(_id, { hashedRefreshToken });
   }
 
   async findAllUsers({ usersIds }: { usersIds?: string[] }): Promise<User[]> {
@@ -41,32 +29,12 @@ export class UsersService {
     return await this.userModel.findById(id);
   }
 
-  async findUserByName({ name }: { name: string }): Promise<User> {
-    return this.userModel.findOne({ name });
-  }
-
   async findUserByEmail({ email }: { email: string }): Promise<User | null> {
     return this.userModel.findOne({ email });
   }
 
   async findUserByLogin({ login }: { login: string }): Promise<User | null> {
     return await this.userModel.findOne({ login });
-  }
-
-  async findUserByRefreshToken({
-    refreshToken,
-    userId,
-  }: {
-    refreshToken: string;
-    userId: string;
-  }): Promise<User> {
-    const user = await this.userModel.findOne({
-      _id: userId,
-    });
-
-    if (user && (await compare(refreshToken, user.hashedRefreshToken))) {
-      return user;
-    }
   }
 
   async findByIdAndUpdateUser({

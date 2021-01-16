@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/helpers/schemas/user.schema';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
