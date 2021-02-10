@@ -5,6 +5,7 @@ import { hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
 import { User } from 'src/helpers/schemas/user.schema';
+import sendEmail from 'src/helpers/resourse/sendEmail';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
     createdUser.password = await hash(createdUser.password, 10);
+    await sendEmail();
     return await createdUser.save();
   }
 
