@@ -22,6 +22,12 @@ export class User extends Document {
   })
   email: string;
 
+  @Prop({
+    type: 'Boolean',
+    default: false,
+  })
+  verifyEmail: boolean;
+
   @Prop({ required: true })
   password: string;
 

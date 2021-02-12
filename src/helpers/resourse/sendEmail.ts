@@ -1,6 +1,12 @@
 import * as nodeMailer from 'nodemailer';
+import * as pug from 'pug';
+import { resolve } from 'path';
 
-const sendEmail = async () => {
+const sendEmail = async ({ email, id }: { email: string; id: string }) => {
+  const compiledFunction = pug.compileFile(
+    resolve(`${__dirname}/../../../templateMail/index.pug`),
+  );
+
   const transporter = nodeMailer.createTransport({
     host: 'smtp.mail.ru',
     port: 465,
@@ -13,10 +19,12 @@ const sendEmail = async () => {
 
   const info = await transporter.sendMail({
     from: 'canya.panfilov.95@mail.ru',
-    to: 'canya.panfilov.95@gmail.com',
+    to: email,
     subject: 'Hello',
     text: 'Hello world?',
-    html: '<b>Hellp world html</b>',
+    html: compiledFunction({
+      link: `http://localhost:3000/verify/${id}`,
+    }),
   });
 
   console.log(info);

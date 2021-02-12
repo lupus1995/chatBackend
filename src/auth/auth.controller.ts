@@ -1,4 +1,3 @@
-import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import {
   Controller,
@@ -10,11 +9,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import JwtRefreshGuard from './guard/refresh-auth.guard';
-import { RefreshDto } from './dto/refresh.dto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import RefreshAuthGuard from './guard/refresh-auth.guard';
-import parseBearerToken from 'parse-bearer-token';
 
 @ApiTags('auth')
 @Controller('auth')

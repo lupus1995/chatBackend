@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
@@ -15,8 +15,12 @@ export class UsersService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
     createdUser.password = await hash(createdUser.password, 10);
-    await sendEmail();
-    return await createdUser.save();
+
+    await createdUser.save();
+
+    await sendEmail({ email: createUserDto.email, id: createdUser._id });
+
+    return createdUser;
   }
 
   async findAllUsers({ usersIds }: { usersIds?: string[] }): Promise<User[]> {
@@ -51,5 +55,19 @@ export class UsersService {
 
   async deleteUser({ id }: { id: string }) {
     return this.userModel.findByIdAndDelete(id);
+  }
+
+  async verifyEmail({ id }: { id: string }): Promise<boolean> {
+    console.log(isValidObjectId(id));
+    const user = await this.findOneUser({ id });
+    console.log(user);
+    if (user) {
+      await this.userModel.findByIdAndUpdate(id, {
+        verifyEmail: true,
+      });
+
+      return true;
+    }
+    return false;
   }
 }

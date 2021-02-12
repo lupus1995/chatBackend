@@ -1,3 +1,4 @@
+import { ExistUserPipe } from './../helpers/pipes/exist-user.pipe';
 import { CreateUserDto } from './dto/createUserDto';
 import { UsersService } from './users.service';
 import {
@@ -8,7 +9,10 @@ import {
   Param,
   Post,
   Put,
+  Response,
+  Res,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { User } from 'src/helpers/schemas/user.schema';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
@@ -53,13 +57,32 @@ export class UsersController {
     return await this.usersService.createUser(createUserDto);
   }
 
+  // верификация email
+  @Get('verify/:id')
+  @UsePipes(ExistUserPipe)
+  @ApiResponse({
+    description: 'Подтвеждение пользователя email',
+    status: 200,
+  })
+  @ApiResponse({
+    description: 'Ошибка в данных запроса',
+    status: 400,
+  })
+  @ApiResponse({
+    description: 'Пользователя нет в базе данных',
+    status: 404,
+  })
+  async verifyEmail(@Param('id') id: string): Promise<boolean> {
+    return await this.usersService.verifyEmail({ id });
+  }
+
   // обновить пользователя
   @Put(':id')
   @ApiResponse({
     description: 'Обновление пользователя',
     status: 200,
   })
-  async update(@Param('id') id, @Body() createUserDto: CreateUserDto) {
+  async update(@Param('id') id: string, @Body() createUserDto: CreateUserDto) {
     return await this.usersService.findByIdAndUpdateUser({ id, createUserDto });
   }
 

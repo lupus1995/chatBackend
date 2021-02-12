@@ -1,25 +1,30 @@
-import { UsersService } from '../../users/users.service';
+import { User } from 'src/helpers/schemas/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import {
   BadRequestException,
-  Inject,
+  Injectable,
   NotFoundException,
   PipeTransform,
 } from '@nestjs/common';
+import { Model } from 'mongoose';
 
+@Injectable()
 export class ExistUserPipe implements PipeTransform {
-  constructor(
-    @Inject(UsersService) private readonly usersService: UsersService,
-  ) {}
-
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   async transform(value: string) {
     try {
-      const user = await this.usersService.findOneUser({ id: value });
-      if (user) {
-        return value;
+      const user = await this.userModel.findById(value);
+      if (!user) {
+        throw new NotFoundException(
+          `Пользователя с id ${value} нет в базе данных`,
+        );
       }
-      throw new NotFoundException('Указан несуществующий id пользователя');
+
+      return value;
     } catch (e) {
-      throw new BadRequestException('Некорректно указан id пользователя');
+      throw new BadRequestException(
+        `Не корректно указан id ${value} пользователя`,
+      );
     }
   }
 }
