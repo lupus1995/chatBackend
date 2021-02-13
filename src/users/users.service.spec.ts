@@ -41,6 +41,12 @@ describe('UserService', () => {
     expect(user.email).toBe(createdUser.email);
   });
 
+  it('check function verifyEmail', async () => {
+    const user = await service.createUser(createdUser);
+    const verifyEmail = await service.verifyEmail({ id: user.id });
+    expect(verifyEmail).toBe(true);
+  });
+
   afterAll(async () => {
     await closeInMongodConnection();
   });

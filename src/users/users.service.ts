@@ -5,7 +5,6 @@ import { hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
 import { User } from '../helpers/schemas/user.schema';
-import sendEmail from '../helpers/resourse/sendEmail';
 
 @Injectable()
 export class UsersService {
@@ -58,9 +57,7 @@ export class UsersService {
   }
 
   async verifyEmail({ id }: { id: string }): Promise<boolean> {
-    console.log(isValidObjectId(id));
     const user = await this.findOneUser({ id });
-    console.log(user);
     if (user) {
       await this.userModel.findByIdAndUpdate(id, {
         verifyEmail: true,
