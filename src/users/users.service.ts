@@ -4,8 +4,8 @@ import { isValidObjectId, Model } from 'mongoose';
 import { hash } from 'bcrypt';
 
 import { CreateUserDto } from './dto/createUserDto';
-import { User } from 'src/helpers/schemas/user.schema';
-import sendEmail from 'src/helpers/resourse/sendEmail';
+import { User } from '../helpers/schemas/user.schema';
+import sendEmail from '../helpers/resourse/sendEmail';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +18,7 @@ export class UsersService {
 
     await createdUser.save();
 
-    await sendEmail({ email: createUserDto.email, id: createdUser._id });
+    // await sendEmail({ email: createUserDto.email, id: createdUser._id });
 
     return createdUser;
   }
