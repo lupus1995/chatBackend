@@ -5,10 +5,12 @@ import { User, UserSchema } from '../helpers/schemas/user.schema';
 import { UsersService } from './users.service';
 import { UniqueUserEmailValidatorConstruct } from '../helpers/validators/unique-user-email.validator';
 import { UniqueUserLoginValidatorConstruct } from '../helpers/validators/unique-user-login.validator';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MailModule,
   ],
   controllers: [UsersController],
   providers: [

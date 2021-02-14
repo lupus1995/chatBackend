@@ -6,7 +6,6 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DialogsModule } from './dialogs/dialogs.module';
 import { MessageModule } from './message/message.module';
-import { TestModule } from './test/test.module';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { TestModule } from './test/test.module';
     AuthModule,
     DialogsModule,
     MessageModule,
-    TestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,3 +1,4 @@
+import { MailService } from './../mail/mail.service';
 import { ExistUserPipe } from './../helpers/pipes/exist-user.pipe';
 import { CreateUserDto } from './dto/createUserDto';
 import { UsersService } from './users.service';
@@ -19,7 +20,10 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private mailService: MailService,
+  ) {}
   // GET получить всех юзеров
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -51,8 +55,10 @@ export class UsersController {
     description: 'Ошибка в данных запроса',
     status: 400,
   })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.createUser(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.usersService.createUser(createUserDto);
+    await this.mailService.sendEmail({ email: user.email, id: user._id });
+    return user;
   }
 
   // верификация email
