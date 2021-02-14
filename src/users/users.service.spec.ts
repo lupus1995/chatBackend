@@ -44,7 +44,7 @@ describe('UserService', () => {
   it('check function verifyEmail', async () => {
     const user = await service.createUser(createdUser);
     const verifyEmail = await service.verifyEmail({ id: user.id });
-    expect(verifyEmail).toBe(true);
+    expect(verifyEmail.verifyEmail).toBe(true);
   });
 
   afterAll(async () => {

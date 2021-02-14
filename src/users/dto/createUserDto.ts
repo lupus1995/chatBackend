@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
-import { UniqueUserEmailValidator } from 'src/helpers/validators/unique-user-email.validator';
-import { UniqueUserLoginValidator } from 'src/helpers/validators/unique-user-login.validator';
+import { UniqueUserEmailValidator } from '../../helpers/validators/unique-user-email.validator';
+import { UniqueUserLoginValidator } from '../../helpers/validators/unique-user-login.validator';
 
 export class CreateUserDto {
   @ApiProperty({

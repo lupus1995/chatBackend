@@ -14,6 +14,7 @@ export class UniqueUserEmailValidatorConstruct
   implements ValidatorConstraintInterface {
   constructor(protected readonly usersService: UsersService) {}
   async validate(value: string, args: ValidationArguments) {
+    if (!value) return false;
     const user = await this.usersService.findUserByEmail({ email: value });
     return !Boolean(user);
   }

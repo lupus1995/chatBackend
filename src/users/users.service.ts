@@ -56,15 +56,16 @@ export class UsersService {
     return this.userModel.findByIdAndDelete(id);
   }
 
-  async verifyEmail({ id }: { id: string }): Promise<boolean> {
+  async verifyEmail({ id }: { id: string }): Promise<User> {
     const user = await this.findOneUser({ id });
     if (user) {
-      await this.userModel.findByIdAndUpdate(id, {
-        verifyEmail: true,
-      });
+      const newUser = user;
 
-      return true;
+      await this.userModel.findByIdAndUpdate(id, { verifyEmail: true });
+      newUser.verifyEmail = true;
+
+      return newUser;
     }
-    return false;
+    return user;
   }
 }

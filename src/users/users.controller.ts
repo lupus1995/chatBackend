@@ -12,8 +12,8 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { User } from 'src/helpers/schemas/user.schema';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { User } from '../helpers/schemas/user.schema';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
@@ -70,7 +70,7 @@ export class UsersController {
     description: 'Пользователя нет в базе данных',
     status: 404,
   })
-  async verifyEmail(@Param('id') id: string): Promise<boolean> {
+  async verifyEmail(@Param('id') id: string): Promise<User> {
     return await this.usersService.verifyEmail({ id });
   }
 

@@ -1,4 +1,3 @@
-import { User } from 'src/helpers/schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   BadRequestException,
@@ -7,6 +6,7 @@ import {
   PipeTransform,
 } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { User } from '../schemas/user.schema';
 
 @Injectable()
 export class ExistUserPipe implements PipeTransform {
