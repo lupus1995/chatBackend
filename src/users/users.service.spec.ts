@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -20,6 +21,9 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.forRoot({
+          envFilePath: 'test.env',
+        }),
         rootMongooseTestModule(),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
       ],

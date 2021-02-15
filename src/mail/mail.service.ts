@@ -7,22 +7,29 @@ import * as pug from 'pug';
 export class MailService {
   async sendEmail({ email, id }: { email: string; id: string }): Promise<void> {
     const compiledFunction = pug.compileFile(
-      resolve(`${__dirname}/../../templateMail/index.pug`),
+      resolve(`${__dirname}${process.env.PATH_TO_TEMPLATE}`),
     );
+    let sender = email;
+
+    if (process.env.EMAIL_REPLACE === 'true') {
+      sender = 'emery.bruen@ethereal.email';
+    }
 
     const transporter = nodeMailer.createTransport({
-      host: 'smtp.mail.ru',
-      port: 465,
-      secure: true,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_SECURE,
       auth: {
-        user: 'canya.panfilov.95@mail.ru',
-        pass: 'lupus1995',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     await transporter.sendMail({
       from: 'canya.panfilov.95@mail.ru',
-      to: email,
+      to: sender,
       subject: 'Confirm email',
       text: 'Confirm email',
       html: compiledFunction({

@@ -24,6 +24,7 @@ import {
   badRequestIncorectUser,
   badRequestDontExistUser,
 } from './users.filings';
+import { ConfigModule } from '@nestjs/config';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -33,7 +34,13 @@ describe('Users', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [rootMongooseTestModule(), UsersModule],
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: 'test.env',
+        }),
+        rootMongooseTestModule(),
+        UsersModule,
+      ],
     }).compile();
 
     app = moduleRef.createNestApplication();

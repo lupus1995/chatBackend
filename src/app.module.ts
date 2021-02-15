@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 import { AppController } from './app.controller';
@@ -9,6 +10,9 @@ import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: 'dev.env',
+    }),
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/chatdb', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
