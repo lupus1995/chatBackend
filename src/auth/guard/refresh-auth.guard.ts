@@ -8,8 +8,9 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import parseBearerToken from 'parse-bearer-token';
-import VerifyTokenInterface from 'src/helpers/interfaces/verify-token.interface';
-import { User } from 'src/helpers/schemas/user.schema';
+
+import VerifyTokenInterface from '../../helpers/interfaces/verify-token.interface';
+import { User } from '../../helpers/schemas/user.schema';
 
 @Injectable()
 export default class RefreshAuthGuard implements CanActivate {

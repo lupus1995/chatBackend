@@ -12,7 +12,7 @@ import { AuthDto } from './dto/auth.dto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import RefreshAuthGuard from './guard/refresh-auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import TokensInterface from './tokens.inteface';
 
 @ApiTags('auth')
@@ -28,14 +28,26 @@ export class AuthController {
     description: 'Авторизация пользователя',
     status: 200,
   })
-  async login(
-    @Body() authDto: AuthDto,
-    @Request() req: any,
-  ): Promise<TokensInterface> {
-    console.log(req.user);
+  @ApiResponse({
+    description: 'Пользователь не авторизован',
+    status: 401,
+  })
+  @ApiResponse({
+    description: 'Неправильно заполненные поля',
+    status: 400,
+  })
+  async login(@Request() req: any): Promise<TokensInterface> {
     return await this.authService.updateTokens({ user: req.user });
   }
 
+  @ApiResponse({
+    description: 'обновление токенов',
+    status: 200,
+  })
+  @ApiResponse({
+    description: 'Пользователь не авторизован',
+    status: 401,
+  })
   @UseGuards(RefreshAuthGuard)
   @Get('refresh')
   async refresh(@Request() req: any) {
