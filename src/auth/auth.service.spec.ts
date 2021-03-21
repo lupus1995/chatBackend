@@ -17,8 +17,8 @@ import TokensInterface from './tokens.inteface';
 const createdUser = {
   name: 'alex',
   login: 'alex',
-  email: 'canya.panfilov.95@gmail.com',
-  password: 'sancho1995',
+  email: 'admin@mail.ru',
+  password: '1234567890',
 };
 
 describe('Auth', () => {
@@ -61,8 +61,8 @@ describe('Auth', () => {
   it('check function validateUserByEmailAndPassword, user will be searched', async () => {
     const user = await userService.createUser(createdUser);
     const searchUser: User | null = await authService.validateUserByEmailAndPassword(
-      'canya.panfilov.95@gmail.com',
-      'sancho1995',
+      createdUser.email,
+      createdUser.password,
     );
     expect(searchUser.email).toEqual(user.email);
     expect(searchUser.password).toEqual(user.password);
@@ -70,8 +70,8 @@ describe('Auth', () => {
 
   it('check function validateUserByEmailAndPassword, user will not be searched', async () => {
     const searchUser: User | null = await authService.validateUserByEmailAndPassword(
-      'canya.panfilov.95@gmail.com',
-      'sancho1995',
+      createdUser.email,
+      createdUser.password,
     );
 
     expect(searchUser).toBeNull();
