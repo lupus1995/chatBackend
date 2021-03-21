@@ -3,6 +3,7 @@ import { Strategy } from 'passport-local';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
+import { User } from '../../helpers/schemas/user.schema';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -15,14 +16,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(request: Request, email: string, password: string) {
-    console.log('payload local', 3333);
     const contextId = ContextIdFactory.getByRequest(request);
     const authService: AuthService = await this.moduleRef.resolve(
       AuthService,
       contextId,
     );
 
-    const user = await authService.validateUserByEmailAndPassword(
+    const user: User | null = await authService.validateUserByEmailAndPassword(
       email,
       password,
     );

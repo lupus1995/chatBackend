@@ -5,9 +5,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { compare } from 'bcrypt';
 import { Model } from 'mongoose';
 import parseBearerToken from 'parse-bearer-token';
 import VerifyTokenInterface from 'src/helpers/interfaces/verify-token.interface';
@@ -27,10 +25,12 @@ export default class RefreshAuthGuard implements CanActivate {
         const userDataFromToken: VerifyTokenInterface = this.authService.getUserDataFromToken(
           { token },
         );
-        const user = await this.authService.validateUserByIdAndRefreshToken({
-          refreshToken: token,
-          id: userDataFromToken.sub,
-        });
+        const user: User | null = await this.authService.validateUserByIdAndRefreshToken(
+          {
+            refreshToken: token,
+            id: userDataFromToken.sub,
+          },
+        );
         if (user) {
           request.user = user;
           return true;

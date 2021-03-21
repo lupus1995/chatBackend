@@ -4,8 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { compare, hash } from 'bcrypt';
 
-import { User } from 'src/helpers/schemas/user.schema';
-import VerifyTokenInterface from 'src/helpers/interfaces/verify-token.interface';
+import { User } from '../helpers/schemas/user.schema';
+import VerifyTokenInterface from '../helpers/interfaces/verify-token.interface';
+import TokensInterface from './tokens.inteface';
 
 @Injectable()
 export class AuthService {
@@ -14,11 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async updateTokens({
-    user,
-  }: {
-    user: User;
-  }): Promise<{ accessToken: string; refreshToken: string }> {
+  async updateTokens({ user }: { user: User }): Promise<TokensInterface> {
     const accessToken = this.getAccessToken(user);
     const refreshToken = this.getRefreshToken(user);
     await this.setRefreshToken({ refreshToken, _id: user._id });
@@ -31,7 +28,7 @@ export class AuthService {
   async validateUserByEmailAndPassword(
     email: string,
     password: string,
-  ): Promise<any> {
+  ): Promise<User | null> {
     const user = await this.userModel.findOne({ email });
 
     if (user && (await compare(password, user.password))) {
@@ -47,13 +44,15 @@ export class AuthService {
   }: {
     id: string;
     refreshToken: string;
-  }): Promise<User> {
+  }): Promise<User | null> {
     const user = await this.userModel.findOne({
       _id: id,
     });
     if (user && (await compare(refreshToken, user.hashedRefreshToken))) {
       return user;
     }
+
+    return null;
   }
 
   getAccessToken(user: User): string {

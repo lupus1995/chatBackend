@@ -64,7 +64,7 @@ describe('Users', () => {
           expect(body).toEqual(badRequestByEmptyEmail);
         })
         .expect(HttpStatus.BAD_REQUEST);
-    });
+    }, 30000);
 
     it('/users POST incorect email', () => {
       return request(app.getHttpServer())

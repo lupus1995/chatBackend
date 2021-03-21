@@ -1,13 +1,15 @@
-import { LocalStrategy } from './strategy/local.strategy';
 import { Global, Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt/dist/jwt.module';
+
+import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/helpers/schemas/user.schema';
+import { User, UserSchema } from '../helpers/schemas/user.schema';
+import { UsersModule } from '../users/users.module';
+import { LocalStrategy } from './strategy/local.strategy';
 
 @Global()
 @Module({
@@ -18,6 +20,7 @@ import { User, UserSchema } from 'src/helpers/schemas/user.schema';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1800s' },
     }),
+    UsersModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],

@@ -43,7 +43,7 @@ describe('UserService', () => {
     expect(user.name).toBe(createdUser.name);
     expect(user.login).toBe(createdUser.login);
     expect(user.email).toBe(createdUser.email);
-  });
+  }, 10000);
 
   it('check function verifyEmail', async () => {
     const user = await service.createUser(createdUser);
