@@ -1,4 +1,5 @@
 import { SMTPServer } from 'smtp-server';
+import logs from '../console/helpers/colors';
 
 const server = new SMTPServer({
   onConnect: function(session, callback) {
@@ -17,6 +18,5 @@ server.on('error', err => {
   console.log('Error %s', err.message);
 });
 server.listen(465, () => {
-  console.log(55555555);
+  console.log(logs.info('smtp server run on port 465'));
 });
-console.log('listening');

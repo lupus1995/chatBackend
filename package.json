@@ -22,7 +22,8 @@
     "nodemone": "node ./node_modules/nodemon/bin/nodemon.js console/index.ts --exec",
     "faker:user": "ts-node console/runFakerData/runUser.ts",
     "faker:dialogs": "ts-node console/runFakerData/runDialogs.ts",
-    "faker:message": "ts-node console/runFakerData/runMessage.ts"
+    "faker:message": "ts-node console/runFakerData/runMessage.ts",
+    "smtp": "ts-node smtpServer/smtpServer.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
